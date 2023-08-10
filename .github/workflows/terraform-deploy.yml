@@ -1,0 +1,56 @@
+name: Deploy Dev
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy-to-amr-dev:
+    runs-on: ubuntu-latest
+    environment: dev
+    env:
+      TERRAFORM_VERSION: latest  
+      ROLE_SESSION_NAME: CI-DEV  
+      ROLE_TO_ASSUME: ${{ secrets.AWS_GITHUB_ACTION_ROLE }}
+      AWS_REGION: us-west-1
+      BUCKET_NAME: dev-state-vu-diep
+      STATE_FILE_KEY: lambda-state/terraform.tfstate
+      STATE_LOCK_DYNAMODB_TABLE: terraform-state-locking
+
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ env.ROLE_TO_ASSUME }}
+          role-session-name: ${{ env.ROLE_SESSION_NAME }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+        
+      - name: terraform init
+        run: |      
+          cd terraform
+          terraform init \
+            -backend-config="bucket=${{ env.BUCKET_NAME }}" \
+            -backend-config="key=${{ env.STATE_FILE_KEY }}" \
+            -backend-config="region=${{ env.AWS_REGION }}" \
+            -backend-config="dynamodb_table=${{ env.STATE_LOCK_DYNAMODB_TABLE }}" \
+
+      - name: Plan Terraform changes
+        run: |
+          cd terraform
+          terraform plan -lock=false 
+
+      - name: Apply Terraform changes
+        run: |
+          cd terraform
+          terraform apply -auto-approve
