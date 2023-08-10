@@ -6,6 +6,9 @@ resource "aws_api_gateway_resource" "example_resource" {
   rest_api_id = aws_api_gateway_rest_api.example_api.id
   parent_id   = aws_api_gateway_rest_api.example_api.root_resource_id
   path_part   = "example"
+
+  # CORS
+  depends_on = [aws_api_gateway_rest_api.example_api]
 }
 
 resource "aws_api_gateway_method" "example_method" {
@@ -13,6 +16,10 @@ resource "aws_api_gateway_method" "example_method" {
   resource_id   = aws_api_gateway_resource.example_resource.id
   http_method   = "POST"
   authorization = "NONE"
+  request_parameters = {
+    "method.request.header.Content-Type" = false,
+    "method.request.header.Origin" = false
+  }
 }
 
 resource "aws_api_gateway_integration" "example_integration" {
@@ -31,7 +38,7 @@ resource "aws_api_gateway_method_response" "example_response" {
   status_code = "200"
 
   response_parameters = {
-    "method.response.header.Content-Type" = true
+    "method.response.header.Access-Control-Allow-Origin" = "'*'"
   }
 }
 
@@ -40,6 +47,10 @@ resource "aws_api_gateway_integration_response" "example_integration_response" {
   resource_id     = aws_api_gateway_resource.example_resource.id
   http_method     = aws_api_gateway_method.example_method.http_method
   status_code     = aws_api_gateway_method_response.example_response.status_code
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Origin" = "'*'"
+  }
   response_templates = {
     "application/json" = ""
   }
