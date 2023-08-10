@@ -45,14 +45,3 @@ resource "aws_api_gateway_integration_response" "example_integration_response" {
   }
 }
 
-resource "aws_api_gateway_deployment" "example_deployment" {
-  depends_on = [aws_api_gateway_integration.example_integration]
-  rest_api_id = aws_api_gateway_rest_api.example_api.id
-  stage_name = "dev"
-}
-
-resource "aws_api_gateway_stage" "example_stage" {
-  stage_name    = "dev"
-  rest_api_id   = aws_api_gateway_rest_api.example_api.id
-  deployment_id = aws_api_gateway_deployment.example_deployment.id
-}
