@@ -1,3 +1,9 @@
+data "archive_file" "zip" {
+    type = "zip"
+    source_file = "../lambda/main.py"
+    output_path = "lambda.zip"
+}
+
 resource "aws_lambda_function" "example_lambda" {
   function_name = "example-lambda"
   role          = aws_iam_role.lambda_role.arn
