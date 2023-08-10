@@ -16,10 +16,6 @@ resource "aws_api_gateway_method" "example_method" {
   resource_id   = aws_api_gateway_resource.example_resource.id
   http_method   = "POST"
   authorization = "NONE"
-  request_parameters = {
-    "method.request.header.Content-Type" = false,
-    "method.request.header.Origin" = false
-  }
 }
 
 resource "aws_api_gateway_integration" "example_integration" {
@@ -38,7 +34,7 @@ resource "aws_api_gateway_method_response" "example_response" {
   status_code = "200"
 
   response_parameters = {
-    "method.response.header.Access-Control-Allow-Origin" = "'*'"
+    "method.response.header.Access-Control-Allow-Origin" = true
   }
 }
 
