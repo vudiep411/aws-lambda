@@ -7,7 +7,7 @@ data "archive_file" "zip" {
 resource "aws_lambda_function" "example_lambda" {
   function_name = "example-lambda"
   role          = aws_iam_role.lambda_role.arn
-  handler       = "lambda.main.lambda_handler"
+  handler       = "main.lambda_handler"
   runtime       = "python3.9"
   filename      = "${data.archive_file.zip.output_path}"
 
