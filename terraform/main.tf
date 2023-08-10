@@ -22,5 +22,5 @@ resource "aws_lambda_permission" "apigw_lambda" {
   function_name = aws_lambda_function.example_lambda.function_name
   principal     = "apigateway.amazonaws.com"
 
-  source_arn = aws_api_gateway_rest_api.example_api.execution_arn
+  source_arn = "${aws_api_gateway_rest_api.example_api.execution_arn}/*/*"
 }
