@@ -44,6 +44,11 @@ jobs:
             -backend-config="key=${{ env.STATE_FILE_KEY }}" \
             -backend-config="region=${{ env.AWS_REGION }}" \
             -backend-config="dynamodb_table=${{ env.STATE_LOCK_DYNAMODB_TABLE }}" \
+            
+      - name: Terraform Show
+        run: | 
+          cd terraform
+          terraform show
 
       - name: Plan Terraform changes
         run: |
