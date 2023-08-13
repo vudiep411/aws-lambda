@@ -1,5 +1,5 @@
 import json
-# from confluent_kafka import Producer
+from confluent_kafka import Producer
 
 def lambda_handler(event, context):
     print(event)
