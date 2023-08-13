@@ -48,7 +48,7 @@ jobs:
       - name: Destroy
         run : | 
           cd terraform
-          terraform destroy -auto-approve
+          terraform destroy -auto-approve "-lock=false"
             
       # - name: Terraform Show
       #   run: | 
