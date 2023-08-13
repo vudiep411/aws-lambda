@@ -36,6 +36,6 @@ data "archive_file" "layer_zip" {
 resource "aws_lambda_layer_version" "my_layer" {
   layer_name     = "my-layer"
   compatible_runtimes = ["python3.9"]
-
+  source_code_hash = "${data.archive_file.layer_zip.output_base64sha256}"
   filename = "${data.archive_file.layer_zip.output_path}"
 }
