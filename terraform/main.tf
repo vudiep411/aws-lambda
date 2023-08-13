@@ -1,6 +1,6 @@
 data "archive_file" "zip" {
     type = "zip"
-    source_file = "../lambda"
+    source_file = "../lambda/main.py"
     output_path = "lambda.zip"
 }
 
@@ -29,7 +29,7 @@ resource "aws_lambda_permission" "apigw_lambda" {
 # layer
 data "archive_file" "layer_zip" {
   type        = "zip"
-  source_file  = "../layer"
+  source_dir  = "../layer/"
   output_path = "layer.zip"
 }
 
