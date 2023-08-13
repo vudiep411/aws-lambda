@@ -35,7 +35,7 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: ${{ env.TERRAFORM_VERSION }}
-        
+
       - name: terraform init
         run: |      
           cd terraform
@@ -44,18 +44,23 @@ jobs:
             -backend-config="key=${{ env.STATE_FILE_KEY }}" \
             -backend-config="region=${{ env.AWS_REGION }}" \
             -backend-config="dynamodb_table=${{ env.STATE_LOCK_DYNAMODB_TABLE }}" \
+
+      - name: Destroy
+        run : | 
+          cd terraform
+          terraform destroy
             
-      - name: Terraform Show
-        run: | 
-          cd terraform
-          terraform show
+      # - name: Terraform Show
+      #   run: | 
+      #     cd terraform
+      #     terraform show
 
-      - name: Plan Terraform changes
-        run: |
-          cd terraform
-          terraform plan -lock=false 
+      # - name: Plan Terraform changes
+      #   run: |
+      #     cd terraform
+      #     terraform plan -lock=false 
 
-      - name: Apply Terraform changes
-        run: |
-          cd terraform
-          terraform apply -auto-approve
+      # - name: Apply Terraform changes
+      #   run: |
+      #     cd terraform
+      #     terraform apply -auto-approve
